@@ -1,0 +1,11 @@
+language: java
+jdk:
+  - oraclejdk8
+services:
+  - postgresql
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: EAarun+RJJ0tYUyv6/Elrw0gaW7uP4F/uvHuYtg/OvPSU1vCBmK8QqKxQniIaEg6n19369OWzLSSvGjGs2DC523hDeImWozjVtzzXYiXhDClvaCrlGkt0OP/mxENO6a89cp/egJEp+iFJRBPO3wQkkkdQ+a38/vYgXdUva0XdtzFfC1tUaCjhSYthiONOgTsKXClYkj4il/H36Et8HcnGJ51gqTM6wlg3/zAvUditCCx3WcQ1cQC3tpwV2vAqMNH9t9CUf+X/EAzeZqOGUAaeCOTnuf/yWDUU/AoDOMtLbIG+HBbH3artCt6/CFsmwotTTlEFHmMNouvlZ9kTyhEXWdTL9v/T9JJvFclKJmYEOkl2XgvYi7YZ04QvzZlmd1mq2N12vYNa2b5WUlmOUKwZtQK7KwlGZZ8gbf0z97qm6JN/aDavzIlFLfFItHFPXFp9ITb/WUYgADWacHJTIA6z5fQvZdifWVVkGxlcWcr4MxnIgKmAigRMOABgNL9/3rkMpviOb2WWHPfs72MCAP9lxiU5Y2jlcWaAEZEgLEzQ57H9NIM4iKwljcAsTA6FTNX0NH3Jw+BDpwyazaEMbZKEr7Ir0TJLAvIi5Qgd/Ep0ygrOLQQwQqneq76XQhUdhJ/3Df85ODxpP2hdt5sRjFS3upqzNYwPeNnldNKhGNWfu8=
+  app: cataloger-provider
