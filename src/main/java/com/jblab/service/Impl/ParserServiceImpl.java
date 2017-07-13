@@ -52,6 +52,7 @@ public class ParserServiceImpl implements ParseService {
                 product.setTitle(element.getElementsByTagName("title").item(0).getTextContent());
                 product.setCurrency(element.getElementsByTagName("currencyId").item(0).getTextContent());
                 products.add(product);
+
             }
         }
         if (products.size() == 0) {
