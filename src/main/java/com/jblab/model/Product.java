@@ -13,12 +13,29 @@ public class Product {
     @Id
     @GeneratedValue
     private Long id;
-
+    private String title;
     private String serial;
     private String name;
     private String cost;
     private String url;
     private String imgUrl;
+    private String currency;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getSerial() {
         return serial;
