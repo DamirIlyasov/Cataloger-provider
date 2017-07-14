@@ -45,7 +45,8 @@ public class PleerParser {
             Node node = nodeListCategories.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
-                categories.put(element.getAttribute("id"), element.getTextContent());
+                String cathegory = element.getTextContent().replaceAll("/","-");
+                categories.put(element.getAttribute("id"), cathegory);
             }
         }
         logger.info("Parsing categories completed!");

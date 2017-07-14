@@ -12,7 +12,7 @@ public class Journal {
     @GeneratedValue
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Product> products;
     private String uid;
 

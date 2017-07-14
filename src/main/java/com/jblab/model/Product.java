@@ -24,7 +24,15 @@ public class Product {
     private String imgUrl;
     private String currency;
     private String category;
+    private int countViews = 0;
 
+    public int getCountViews() {
+        return countViews;
+    }
+
+    public void setCountViews(int countViews) {
+        this.countViews = countViews;
+    }
 
     public String getCategory() {
         return category;
