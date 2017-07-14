@@ -39,7 +39,7 @@ public class PleerParser {
         Map<String,String> categories = new HashMap<>();
 
 
-        NodeList nodeListCategories = doc.getElementsByTagName("category");
+        NodeList nodeListCategories = doc.getElementsByTagName("categories");
         logger.info(nodeListCategories.getLength() + " categories found in XML.");
         for (int i = 0; i < nodeListCategories.getLength(); i++) {
             Node node = nodeListCategories.item(i);
@@ -52,7 +52,7 @@ public class PleerParser {
         logger.info("Parsing categories completed!");
         logger.info("Parsing products started!");
         List<Product> products = new ArrayList<>();
-        NodeList nodeListProducts = doc.getElementsByTagName("offer");
+        NodeList nodeListProducts = doc.getElementsByTagName("offers");
         logger.info(nodeListProducts.getLength() + " products found in XML.");
         for (int i = 0; i < nodeListProducts.getLength(); i++) {
             Node node = nodeListProducts.item(i);
