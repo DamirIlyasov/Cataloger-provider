@@ -4,7 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.math.BigDecimal;
 
 /**
  * Created by damir on 06.07.17.
@@ -24,15 +23,15 @@ public class Product {
     @Column(length = 400)
     private String imgUrl;
     private String currency;
-    private String cathegory;
+    private String category;
 
 
-    public String getCathegory() {
-        return cathegory;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCathegory(String cathegory) {
-        this.cathegory = cathegory;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getCurrency() {

@@ -59,7 +59,7 @@ public class PleerParser {
                 Element element = (Element) node;
                 Product product = new Product();
                 product.setSerial(element.getAttribute("id"));
-                product.setCathegory(categories.get(element.getElementsByTagName("categoryId").item(0).getTextContent()));
+                product.setCategory(categories.get(element.getElementsByTagName("categoryId").item(0).getTextContent()));
                 try {
                     product.setName(element.getElementsByTagName("model").item(0).getTextContent());
                 } catch (NullPointerException e) {
