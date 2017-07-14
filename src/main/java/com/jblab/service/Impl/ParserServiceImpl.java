@@ -2,6 +2,8 @@ package com.jblab.service.Impl;
 
 import com.jblab.model.Product;
 import com.jblab.service.ParseService;
+import com.jblab.util.AliexpressParser;
+import com.jblab.util.PleerParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,40 +27,17 @@ import java.util.List;
 @Service
 public class ParserServiceImpl implements ParseService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    public List<Product> parse(String path) throws IOException, SAXException, ParserConfigurationException {
-        logger.info("-------------------------------------");
-        logger.info("Parser: started...");
-        File inputXml = new File(path);
-        logger.info("Parser: working on file: " + inputXml.getAbsolutePath());
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(inputXml);
-        doc.getDocumentElement().normalize();
-        List<Product> products = new ArrayList<>();
-        NodeList nodeList = doc.getElementsByTagName("offer");
-        logger.info("Parser: " + nodeList.getLength() + " products found in XML.");
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            Node node = nodeList.item(i);
-
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element) node;
-                Product product = new Product();
-                product.setSerial(element.getAttribute("id"));
-                product.setName(element.getElementsByTagName("name").item(0).getTextContent());
-                product.setCost(element.getElementsByTagName("price").item(0).getTextContent() );
-                product.setUrl(element.getElementsByTagName("url").item(0).getTextContent());
-                product.setImgUrl(element.getElementsByTagName("image").item(0).getTextContent());
-                product.setTitle(element.getElementsByTagName("title").item(0).getTextContent());
-                product.setCurrency(element.getElementsByTagName("currencyId").item(0).getTextContent());
-                products.add(product);
-
-            }
+    private final AliexpressParser aliexpressParser = new AliexpressParser();
+    private final PleerParser pleerParser = new PleerParser();
+    public List<Product> parse(String path, String fileName) throws IOException, SAXException, ParserConfigurationException {
+        logger.info("Looking for parser for file with name "+ fileName +"...");
+        if (fileName.equals("aliexpress.xml")){
+            return aliexpressParser.parse(path);
         }
-        if (products.size() == 0) {
-            logger.warn("Parser: Something went wrong, no products parsed!");
+        if (fileName.equals("pleer.xml")){
+            return pleerParser.parse(path);
         }
-        logger.info("Parser: Parsing completed.");
-        return products;
+        logger.warn("No parser found!");
+        return null;
     }
 }

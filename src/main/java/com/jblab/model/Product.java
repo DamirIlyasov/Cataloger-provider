@@ -20,6 +20,15 @@ public class Product {
     private String url;
     private String imgUrl;
     private String currency;
+    private String cathegory;
+
+    public String getCathegory() {
+        return cathegory;
+    }
+
+    public void setCathegory(String cathegory) {
+        this.cathegory = cathegory;
+    }
 
     public String getCurrency() {
         return currency;

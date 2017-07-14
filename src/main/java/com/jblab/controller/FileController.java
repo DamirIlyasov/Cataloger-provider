@@ -43,9 +43,14 @@ public class FileController {
     public String handleFileUpload(@RequestParam("file") MultipartFile multipartFile, Model model) {
         if (!multipartFile.isEmpty()) {
             try {
+                String fileName = multipartFile.getOriginalFilename();
                 String path = storageService.save(multipartFile);
-                List<Product> products = parserService.parse(path);
-                productService.saveAll(products);
+                List<Product> products = parserService.parse(path, fileName);
+                if (products != null){
+                    productService.saveAll(products);
+                }else {
+                    model.addAttribute("message","Error: ParseError!");
+                }
             } catch (IOException | SAXException | ParserConfigurationException e) {
                 model.addAttribute("message", "Error: " + e.getMessage());
                 e.printStackTrace();
