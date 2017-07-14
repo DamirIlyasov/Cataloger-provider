@@ -36,23 +36,22 @@ public class PleerParser {
         doc.getDocumentElement().normalize();
 
         logger.info("Searching for cathegories");
-        Map<String,String> categories = new HashMap<>();
+        Map<String, String> categories = new HashMap<>();
 
 
-        NodeList nodeListCategories = doc.getElementsByTagName("categories");
+        NodeList nodeListCategories = doc.getElementsByTagName("category");
         logger.info(nodeListCategories.getLength() + " categories found in XML.");
         for (int i = 0; i < nodeListCategories.getLength(); i++) {
             Node node = nodeListCategories.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE){
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
-                categories.put(element.getAttribute("id"),element.getTextContent());
-                logger.info("Added cathegory: "+ element.getTextContent());
+                categories.put(element.getAttribute("id"), element.getTextContent());
             }
         }
         logger.info("Parsing categories completed!");
         logger.info("Parsing products started!");
         List<Product> products = new ArrayList<>();
-        NodeList nodeListProducts = doc.getElementsByTagName("offers");
+        NodeList nodeListProducts = doc.getElementsByTagName("offer");
         logger.info(nodeListProducts.getLength() + " products found in XML.");
         for (int i = 0; i < nodeListProducts.getLength(); i++) {
             Node node = nodeListProducts.item(i);
@@ -61,10 +60,18 @@ public class PleerParser {
                 Product product = new Product();
                 product.setSerial(element.getAttribute("id"));
                 product.setCathegory(categories.get(element.getElementsByTagName("categoryId").item(0).getTextContent()));
-                product.setName(element.getElementsByTagName("model").item(0).getTextContent());
+                try {
+                    product.setName(element.getElementsByTagName("model").item(0).getTextContent());
+                } catch (NullPointerException e) {
+                    product.setName(element.getElementsByTagName("name").item(0).getTextContent());
+                }
                 product.setCost(element.getElementsByTagName("price").item(0).getTextContent());
                 product.setUrl(element.getElementsByTagName("url").item(0).getTextContent());
-                product.setImgUrl(element.getElementsByTagName("picture").item(0).getTextContent());
+                try {
+                    product.setImgUrl(element.getElementsByTagName("picture").item(0).getTextContent());
+                }catch (NullPointerException e){
+                    product.setImgUrl("");
+                }
                 product.setTitle(element.getElementsByTagName("name").item(0).getTextContent());
                 product.setCurrency(element.getElementsByTagName("currencyId").item(0).getTextContent());
                 products.add(product);

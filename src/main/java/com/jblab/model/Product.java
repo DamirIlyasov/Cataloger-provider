@@ -1,5 +1,6 @@
 package com.jblab.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,14 +14,18 @@ public class Product {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(length = 500)
     private String title;
     private String serial;
     private String name;
     private String cost;
+    @Column(length = 400)
     private String url;
+    @Column(length = 400)
     private String imgUrl;
     private String currency;
     private String cathegory;
+
 
     public String getCathegory() {
         return cathegory;
