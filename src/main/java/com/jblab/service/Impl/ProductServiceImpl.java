@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
             Journal newJournal = new Journal();
             newJournal.setUid(uid);
             logger.info("ProductService: " + "searching for " + count + " products...");
-            List<Product> list = productRepository.findAll(new PageRequest(0, count)).getContent();
+            List<Product> list = productRepository.findAllOrderedByViews(new PageRequest(0,count));
             logger.info("ProductService: " + list.size() + " products found!");
             newJournal.setProducts(list);
             journalService.save(newJournal);

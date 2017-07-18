@@ -18,7 +18,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query(value = "SELECT * FROM product WHERE product.id NOT IN (SELECT products_id FROM  journal_products WHERE " +
             "(products_id = ANY (SELECT products_id FROM journal_products WHERE " +
             "journal_id = (SELECT journal.id FROM journal WHERE journal.uid = ?1))))" +
-            " order BY ?#{#pageable}", nativeQuery = true)
+            " ORDER BY product.count_views ASC , ?#{#pageable} ,random() ", nativeQuery = true)
     List<Product> get(String uid, Pageable pageable);
 
+    @Query(value = "SELECT * FROM product ORDER BY product.count_views ASC , ?#{#pageable} ,random()" , nativeQuery = true)
+    List<Product> findAllOrderedByViews(Pageable pageable);
 }
