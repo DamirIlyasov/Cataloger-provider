@@ -21,6 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             " ORDER BY product.count_views ASC , ?#{#pageable} ,random() ", nativeQuery = true)
     List<Product> get(String uid, Pageable pageable);
 
-    @Query(value = "SELECT * FROM product ORDER BY product.count_views ASC , ?#{#pageable} ,random()" , nativeQuery = true)
+    @Query(value = "SELECT * FROM product ORDER BY product.count_views ASC , ?#{#pageable} ,random()", nativeQuery = true)
     List<Product> findAllOrderedByViews(Pageable pageable);
 }

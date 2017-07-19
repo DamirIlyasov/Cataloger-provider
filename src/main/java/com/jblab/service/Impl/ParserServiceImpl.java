@@ -101,7 +101,7 @@ public class ParserServiceImpl implements ParseService {
                 }
                 try {
                     product.setDescription(element.getElementsByTagName(descriptionTag).item(0).getTextContent());
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     product.setDescription(element.getElementsByTagName(offerNameTag).item(0).getTextContent());
                 }
                 product.setCurrency(element.getElementsByTagName(currencyTag).item(0).getTextContent());

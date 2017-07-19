@@ -47,15 +47,15 @@ public class FileController {
                 String fileName = multipartFile.getOriginalFilename();
                 String path = storageService.save(multipartFile);
                 List<Product> products = parserService.parse(path, fileName);
-                if (products != null){
+                if (products != null) {
                     try {
                         productService.saveAll(products);
-                    } catch (Exception e){
-                        model.addAttribute("message","Error: "+e.getMessage());
+                    } catch (Exception e) {
+                        model.addAttribute("message", "Error: " + e.getMessage());
                         return "upload";
                     }
-                }else {
-                    model.addAttribute("message","Error: ParseError!");
+                } else {
+                    model.addAttribute("message", "Error: ParseError!");
                 }
             } catch (NullPointerException | IOException | SAXException | ParserConfigurationException e) {
                 model.addAttribute("message", "Error: " + e.getMessage());
