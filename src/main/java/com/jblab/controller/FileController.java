@@ -4,6 +4,7 @@ import com.jblab.model.Product;
 import com.jblab.service.ParseService;
 import com.jblab.service.ProductService;
 import com.jblab.service.StorageService;
+import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,11 +48,16 @@ public class FileController {
                 String path = storageService.save(multipartFile);
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null){
-                    productService.saveAll(products);
+                    try {
+                        productService.saveAll(products);
+                    } catch (Exception e){
+                        model.addAttribute("message","Error: "+e.getMessage());
+                        return "upload";
+                    }
                 }else {
                     model.addAttribute("message","Error: ParseError!");
                 }
-            } catch (IOException | SAXException | ParserConfigurationException e) {
+            } catch (NullPointerException | IOException | SAXException | ParserConfigurationException e) {
                 model.addAttribute("message", "Error: " + e.getMessage());
                 e.printStackTrace();
                 return "upload";

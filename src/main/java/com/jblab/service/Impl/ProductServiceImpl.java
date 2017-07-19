@@ -5,6 +5,7 @@ import com.jblab.model.Product;
 import com.jblab.repository.ProductRepository;
 import com.jblab.service.JournalService;
 import com.jblab.service.ProductService;
+import org.hibernate.exception.DataException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,9 @@ public class ProductServiceImpl implements ProductService {
     public void saveAll(List<Product> products) {
         logger.info("-------------------------------------");
         logger.info("ProductService: saving started...");
+
         productRepository.save(products);
+
         logger.info("ProductService: saved!");
     }
 
@@ -48,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
             Journal newJournal = new Journal();
             newJournal.setUid(uid);
             logger.info("ProductService: " + "searching for " + count + " products...");
-            List<Product> list = productRepository.findAllOrderedByViews(new PageRequest(0,count));
+            List<Product> list = productRepository.findAllOrderedByViews(new PageRequest(0, count));
             logger.info("ProductService: " + list.size() + " products found!");
             newJournal.setProducts(list);
             journalService.save(newJournal);

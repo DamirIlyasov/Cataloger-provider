@@ -1,9 +1,7 @@
 package com.jblab.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by damir on 06.07.17.
@@ -13,15 +11,15 @@ public class Product {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(length = 500)
-    private String title;
-    private String serial;
+    @Column(length = 10000)
+    private String description;
     private String name;
-    private String cost;
+    private String price;
     @Column(length = 400)
     private String url;
+    @ElementCollection
     @Column(length = 400)
-    private String imgUrl;
+    private List<String> imgUrls;
     private String currency;
     private String category;
     private int countViews = 0;
@@ -50,20 +48,12 @@ public class Product {
         this.currency = currency;
     }
 
-    public String getTitle() {
-        return title;
+    public String getDescription() {
+        return description;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getSerial() {
-        return serial;
-    }
-
-    public void setSerial(String serial) {
-        this.serial = serial;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Long getId() {
@@ -82,12 +72,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getCost() {
-        return cost;
+    public String getPrice() {
+        return price;
     }
 
-    public void setCost(String cost) {
-        this.cost = cost;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public String getUrl() {
@@ -98,11 +88,11 @@ public class Product {
         this.url = url;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public List<String> getImgUrls() {
+        return imgUrls;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setImgUrls(List<String> imgUrls) {
+        this.imgUrls = imgUrls;
     }
 }
