@@ -45,7 +45,7 @@ public class FileController {
         if (!multipartFile.isEmpty()) {
             try {
                 String fileName = multipartFile.getOriginalFilename();
-                String path = storageService.save(multipartFile);
+                String path = storageService.save(multipartFile, "upload");
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
                     try {
@@ -68,20 +68,23 @@ public class FileController {
     }
 
     @RequestMapping(value = "/delete")
-    public String getDeletePage(){
+    public String getDeletePage() {
         return "delete";
     }
+
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
-    public String deleteProductsFromFileAndSaveFile(@RequestParam("file") MultipartFile multipartFile, Model model){
+    public String deleteProductsFromFileAndSaveFile(@RequestParam("file") MultipartFile multipartFile, Model model) {
+        int deletedProductsCount = 0;
         if (!multipartFile.isEmpty()) {
             try {
                 String fileName = multipartFile.getOriginalFilename();
-                String path = storageService.save(multipartFile);
+                String path = storageService.save(multipartFile, "delete");
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
                     try {
-                        productService.saveAll(products);
+                        deletedProductsCount = productService.deleteAllByList(products);
                     } catch (Exception e) {
+                        e.printStackTrace();
                         model.addAttribute("message", "Error: " + e.getMessage());
                         return "delete";
                     }
@@ -93,7 +96,7 @@ public class FileController {
                 e.printStackTrace();
                 return "delete";
             }
-            model.addAttribute("message", "Successfully deleted " + multipartFile.getOriginalFilename());
+            model.addAttribute("message", deletedProductsCount + " products successfully deleted! " + multipartFile.getOriginalFilename());
         }
         return "delete";
     }

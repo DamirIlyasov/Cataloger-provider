@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * Created by damir on 07.07.17.
  */
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     private JournalService journalService;
@@ -34,11 +36,30 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void saveAll(List<Product> products) {
         logger.info("-------------------------------------");
-        logger.info("ProductService: saving started...");
-
+        logger.info("Saving products started...");
         productRepository.save(products);
+        logger.info("Products saved!");
+    }
 
-        logger.info("ProductService: saved!");
+    @Override
+    public int deleteAllByList(List<Product> products) {
+        logger.info("-------------------------------------");
+        logger.info("Deleting products started...");
+        int deletedRows = 0;
+        int deletedRowsTotal = 0;
+        for (Product product : products) {
+            String category = product.getCategory();
+            String currency = product.getCurrency();
+            String description = product.getDescription();
+            String name = product.getName();
+            String price = product.getPrice();
+            String url = product.getUrl();
+            deletedRows = productRepository.deleteByCategoryAndCurrencyAndDescriptionAndNameAndPriceAndUrl(category,
+                    currency, description, name, price, url);
+            deletedRowsTotal += deletedRows;
+        }
+        logger.info(deletedRowsTotal + " products deleted!");
+        return deletedRowsTotal;
     }
 
     @Override

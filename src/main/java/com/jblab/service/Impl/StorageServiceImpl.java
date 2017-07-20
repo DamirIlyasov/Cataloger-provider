@@ -20,12 +20,19 @@ import java.util.Date;
 public class StorageServiceImpl implements StorageService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public String save(MultipartFile multipartFile) throws IOException {
+    public String save(MultipartFile multipartFile, String status) throws IOException {
 
         logger.info("StorageService: saving file started...");
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-        File file = new File(Paths.get("").toAbsolutePath() + "/src/main/resources/XMLs/uploaded/" +  format.format(date) + multipartFile.getOriginalFilename());
+        String path = "";
+        if (status.equals("upload")){
+            path = "/src/main/resources/XMLs/uploaded/";
+        }
+        if (status.equals("delete")){
+            path = "/src/main/resources/XMLs/deleted/";
+        }
+        File file = new File(Paths.get("").toAbsolutePath() + path +  format.format(date) + multipartFile.getOriginalFilename());
         if (!file.exists()) {
             file.createNewFile();
         }

@@ -8,10 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * Created by damir on 11.07.17.
  */
 @Service
+@Transactional
 public class JournalServiceImpl implements JournalService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

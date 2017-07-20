@@ -4,6 +4,7 @@ import com.jblab.model.Product;
 import com.jblab.model.Journal;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT * FROM product ORDER BY product.count_views ASC , ?#{#pageable} ,random()", nativeQuery = true)
     List<Product> findAllOrderedByViews(Pageable pageable);
+
+    @Modifying
+    int deleteByCategoryAndCurrencyAndDescriptionAndNameAndPriceAndUrl(String category, String currency,
+                                                                           String description, String name,
+                                                                           String price, String url);
 }
