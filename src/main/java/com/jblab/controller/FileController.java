@@ -4,7 +4,6 @@ import com.jblab.model.Product;
 import com.jblab.service.ParseService;
 import com.jblab.service.ProductService;
 import com.jblab.service.StorageService;
-import org.hibernate.exception.DataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,9 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by damir on 05.07.17.
- */
+
 @Controller
 public class FileController {
 
@@ -48,21 +45,18 @@ public class FileController {
                 String path = storageService.save(multipartFile, "upload");
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
-                    try {
-                        productService.saveAll(products);
-                    } catch (Exception e) {
-                        model.addAttribute("message", "Error: " + e.getMessage());
-                        return "upload";
-                    }
+                    productService.saveAll(products);
                 } else {
                     model.addAttribute("message", "Error: ParseError!");
                 }
-            } catch (NullPointerException | IOException | SAXException | ParserConfigurationException e) {
+            } catch (Exception e) {
                 model.addAttribute("message", "Error: " + e.getMessage());
                 e.printStackTrace();
                 return "upload";
             }
             model.addAttribute("message", "Successfully uploaded " + multipartFile.getOriginalFilename());
+        } else {
+            model.addAttribute("message", "Error: Empty file!");
         }
         return "upload";
     }
@@ -81,13 +75,7 @@ public class FileController {
                 String path = storageService.save(multipartFile, "delete");
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
-                    try {
-                        deletedProductsCount = productService.deleteAllByList(products);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        model.addAttribute("message", "Error: " + e.getMessage());
-                        return "delete";
-                    }
+                    deletedProductsCount = productService.deleteAllByList(products);
                 } else {
                     model.addAttribute("message", "Error: ParseError!");
                 }
@@ -97,6 +85,8 @@ public class FileController {
                 return "delete";
             }
             model.addAttribute("message", deletedProductsCount + " products successfully deleted! " + multipartFile.getOriginalFilename());
+        } else {
+            model.addAttribute("message","Error: empty file!");
         }
         return "delete";
     }

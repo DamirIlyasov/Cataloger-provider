@@ -24,9 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by damir on 06.07.17.
- */
 @Service
 @PropertySource(value = "classpath:parser.properties")
 public class ParserServiceImpl implements ParseService {
@@ -58,6 +55,7 @@ public class ParserServiceImpl implements ParseService {
         String pictureUrlTag = environment.getProperty(fileName + ".picture");
         String currencyTag = environment.getProperty(fileName + ".currency");
         String descriptionTag = environment.getProperty(fileName + ".description");
+        String shopNameTag = environment.getProperty(fileName + ".shopName");
         logger.info("Reading parser.properties completed success!");
 
         logger.info("Searching for cathegories");
@@ -77,18 +75,38 @@ public class ParserServiceImpl implements ParseService {
         logger.info("Parsing categories completed!");
         logger.info("Parsing products started!");
         List<Product> products = new ArrayList<>();
+        String shopName = doc.getElementsByTagName(shopNameTag).item(0).getTextContent();
         NodeList nodeListProducts = doc.getElementsByTagName(offerTag);
         logger.info(nodeListProducts.getLength() + " products found in XML.");
 
         for (int i = 0; i < nodeListProducts.getLength(); i++) {
             Node node = nodeListProducts.item(i);
+
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
+                String category = categories.get(element.getElementsByTagName(offerCategoryIdTag).item(0).getTextContent());
+                String name = element.getElementsByTagName(offerNameTag).item(0).getTextContent();
+                String readableName = name.replaceAll("[ ]|[/]", "");
+                readableName = readableName.toLowerCase();
+                String price = element.getElementsByTagName(offerPriceTag).item(0).getTextContent();
+                String url = element.getElementsByTagName(referalUrlTag).item(0).getTextContent();
+                String currency = element.getElementsByTagName(currencyTag).item(0).getTextContent();
+                String description;
+                try {
+                    description = element.getElementsByTagName(descriptionTag).item(0).getTextContent();
+                } catch (NullPointerException e) {
+                    description = name;
+                }
+                String readableCategory = category.replaceAll("[ ]|[,]", "").toLowerCase();
+
+
                 Product product = new Product();
-                product.setCategory(categories.get(element.getElementsByTagName(offerCategoryIdTag).item(0).getTextContent()));
-                product.setName(element.getElementsByTagName(offerNameTag).item(0).getTextContent());
-                product.setPrice(element.getElementsByTagName(offerPriceTag).item(0).getTextContent());
-                product.setUrl(element.getElementsByTagName(referalUrlTag).item(0).getTextContent());
+                product.setReadableName(readableName);
+                product.setReadableCategory(readableCategory);
+                product.setCategory(category);
+                product.setName(name);
+                product.setPrice(price);
+                product.setUrl(url);
                 try {
                     List<String> pictures = new ArrayList<>();
                     NodeList picsNodeList = element.getElementsByTagName(pictureUrlTag);
@@ -100,12 +118,8 @@ public class ParserServiceImpl implements ParseService {
                 } catch (NullPointerException e) {
                     product.setImgUrls(null);
                 }
-                try {
-                    product.setDescription(element.getElementsByTagName(descriptionTag).item(0).getTextContent());
-                } catch (NullPointerException e) {
-                    product.setDescription(element.getElementsByTagName(offerNameTag).item(0).getTextContent());
-                }
-                product.setCurrency(element.getElementsByTagName(currencyTag).item(0).getTextContent());
+                product.setDescription(description);
+                product.setCurrency(currency);
                 products.add(product);
             }
         }
@@ -113,6 +127,7 @@ public class ParserServiceImpl implements ParseService {
         if (products.size() == 0) {
             logger.warn("Something went wrong, no products parsed!");
         }
+
         return products;
     }
 }

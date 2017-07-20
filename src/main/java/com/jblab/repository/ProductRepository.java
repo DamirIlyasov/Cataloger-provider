@@ -10,9 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by damir on 07.07.17.
- */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
@@ -27,6 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     int deleteByCategoryAndCurrencyAndDescriptionAndNameAndPriceAndUrl(String category, String currency,
-                                                                           String description, String name,
-                                                                           String price, String url);
+                                                                       String description, String name,
+                                                                       String price, String url);
+    Product findOneByUrl(String url);
 }

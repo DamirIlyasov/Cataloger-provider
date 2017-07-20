@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-/**
- * Created by damir on 11.07.17.
- */
 @Service
 @Transactional
 public class JournalServiceImpl implements JournalService {

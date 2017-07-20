@@ -13,11 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by damir on 07.07.17.
- */
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
@@ -37,8 +35,18 @@ public class ProductServiceImpl implements ProductService {
     public void saveAll(List<Product> products) {
         logger.info("-------------------------------------");
         logger.info("Saving products started...");
-        productRepository.save(products);
-        logger.info("Products saved!");
+        int counter = 0;
+        for (Product product : products) {
+            Product dbProduct = productRepository.findOneByUrl(product.getUrl());
+            if (dbProduct == null) {
+                productRepository.save(product);
+                Product p = productRepository.findOneByUrl(product.getUrl());
+                p.setReadableName(p.getReadableName() + "_" + p.getId());
+                productRepository.save(p);
+                counter++;
+            }
+        }
+        logger.info(counter + " products saved!");
     }
 
     @Override

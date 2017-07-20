@@ -3,17 +3,15 @@ package com.jblab.model;
 import javax.persistence.*;
 import java.util.List;
 
-/**
- * Created by damir on 06.07.17.
- */
 @Entity
 public class Product {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(length = 10000)
+    @Column(columnDefinition = "Text")
     private String description;
     private String name;
+    private String readableName;
     private String price;
     @Column(length = 400)
     private String url;
@@ -24,7 +22,24 @@ public class Product {
     private String mainImgUrl;
     private String currency;
     private String category;
+    private String readableCategory;
     private int countViews = 0;
+
+    public String getReadableName() {
+        return readableName;
+    }
+
+    public void setReadableName(String readableName) {
+        this.readableName = readableName;
+    }
+
+    public String getReadableCategory() {
+        return readableCategory;
+    }
+
+    public void setReadableCategory(String readableCategory) {
+        this.readableCategory = readableCategory;
+    }
 
     public String getMainImgUrl() {
         return mainImgUrl;

@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.UUID;
 
-/**
- * Created by damir on 11.07.17.
- */
+
 @Controller
 public class RegistrationController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

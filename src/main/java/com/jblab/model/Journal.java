@@ -3,9 +3,6 @@ package com.jblab.model;
 import javax.persistence.*;
 import java.util.List;
 
-/**
- * Created by damir on 11.07.17.
- */
 @Entity
 public class Journal {
     @Id

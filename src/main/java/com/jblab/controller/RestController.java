@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-/**
- * Created by damir on 07.07.17.
- */
 @Controller
 public class RestController {
 
@@ -32,12 +29,6 @@ public class RestController {
                                      @RequestParam(value = "uid") String uid) {
         List<Product> products = productService.get(count, uid);
         logger.info("Updating viewCounters...");
-//        for (int i = 0; i < products.size(); i++) {
-//            int counter = products.get(i).getCountViews();
-//            logger.info("Old viewCounter: " + counter);
-//            products.get(i).setCountViews(++counter);
-//            logger.info("New viewCounter: " + products.get(i).getCountViews());
-//        }
         for (Product product : products) {
             int countViews = product.getCountViews();
             product.setCountViews(++countViews);
