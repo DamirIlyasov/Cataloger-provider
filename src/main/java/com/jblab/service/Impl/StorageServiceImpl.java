@@ -25,7 +25,7 @@ public class StorageServiceImpl implements StorageService {
         logger.info("StorageService: saving file started...");
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-        File file = new File(Paths.get("").toAbsolutePath() + "/src/main/resources/XMLs/" + format.format(date) + ".xml");
+        File file = new File(Paths.get("").toAbsolutePath() + "/src/main/resources/XMLs/uploaded/" +  format.format(date) + multipartFile.getOriginalFilename());
         if (!file.exists()) {
             file.createNewFile();
         }

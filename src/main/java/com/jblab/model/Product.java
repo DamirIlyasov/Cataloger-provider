@@ -20,6 +20,7 @@ public class Product {
     @ElementCollection
     @Column(length = 400)
     private List<String> imgUrls;
+    @Column(length = 400)
     private String mainImgUrl;
     private String currency;
     private String category;

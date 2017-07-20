@@ -41,7 +41,7 @@ public class FileController {
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String handleFileUpload(@RequestParam("file") MultipartFile multipartFile, Model model) {
+    public String uploadFileAndSaveProductsAndFile(@RequestParam("file") MultipartFile multipartFile, Model model) {
         if (!multipartFile.isEmpty()) {
             try {
                 String fileName = multipartFile.getOriginalFilename();
@@ -65,6 +65,37 @@ public class FileController {
             model.addAttribute("message", "Successfully uploaded " + multipartFile.getOriginalFilename());
         }
         return "upload";
+    }
+
+    @RequestMapping(value = "/delete")
+    public String getDeletePage(){
+        return "delete";
+    }
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    public String deleteProductsFromFileAndSaveFile(@RequestParam("file") MultipartFile multipartFile, Model model){
+        if (!multipartFile.isEmpty()) {
+            try {
+                String fileName = multipartFile.getOriginalFilename();
+                String path = storageService.save(multipartFile);
+                List<Product> products = parserService.parse(path, fileName);
+                if (products != null) {
+                    try {
+                        productService.saveAll(products);
+                    } catch (Exception e) {
+                        model.addAttribute("message", "Error: " + e.getMessage());
+                        return "delete";
+                    }
+                } else {
+                    model.addAttribute("message", "Error: ParseError!");
+                }
+            } catch (NullPointerException | IOException | SAXException | ParserConfigurationException e) {
+                model.addAttribute("message", "Error: " + e.getMessage());
+                e.printStackTrace();
+                return "delete";
+            }
+            model.addAttribute("message", "Successfully deleted " + multipartFile.getOriginalFilename());
+        }
+        return "delete";
     }
 
 }
