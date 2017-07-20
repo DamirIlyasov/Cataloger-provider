@@ -13,12 +13,12 @@ public class Product {
     private String name;
     private String readableName;
     private String price;
-    @Column(length = 400)
+    @Column(length = 3900)
     private String url;
     @ElementCollection
-    @Column(length = 400)
+    @Column(length = 3900)
     private List<String> imgUrls;
-    @Column(length = 400)
+    @Column(length = 3900)
     private String mainImgUrl;
     private String currency;
     private String category;

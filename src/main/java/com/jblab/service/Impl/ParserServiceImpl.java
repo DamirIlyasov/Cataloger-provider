@@ -2,6 +2,7 @@ package com.jblab.service.Impl;
 
 import com.jblab.model.Product;
 import com.jblab.service.ParseService;
+import com.jblab.util.Transliter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,13 @@ import java.util.Map;
 @Service
 @PropertySource(value = "classpath:parser.properties")
 public class ParserServiceImpl implements ParseService {
+    private final Transliter transliter;
     private final Environment environment;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public ParserServiceImpl(Environment environment) {
+    public ParserServiceImpl(Transliter transliter, Environment environment) {
+        this.transliter = transliter;
         this.environment = environment;
     }
 
@@ -86,8 +89,6 @@ public class ParserServiceImpl implements ParseService {
                 Element element = (Element) node;
                 String category = categories.get(element.getElementsByTagName(offerCategoryIdTag).item(0).getTextContent());
                 String name = element.getElementsByTagName(offerNameTag).item(0).getTextContent();
-                String readableName = name.replaceAll("[ ]|[/]", "");
-                readableName = readableName.toLowerCase();
                 String price = element.getElementsByTagName(offerPriceTag).item(0).getTextContent();
                 String url = element.getElementsByTagName(referalUrlTag).item(0).getTextContent();
                 String currency = element.getElementsByTagName(currencyTag).item(0).getTextContent();
@@ -97,8 +98,8 @@ public class ParserServiceImpl implements ParseService {
                 } catch (NullPointerException e) {
                     description = name;
                 }
-                String readableCategory = category.replaceAll("[ ]|[,]", "").toLowerCase();
-
+                String readableName = transliter.toTranslit(name);
+                String readableCategory = transliter.toTranslit(category);
 
                 Product product = new Product();
                 product.setReadableName(readableName);
