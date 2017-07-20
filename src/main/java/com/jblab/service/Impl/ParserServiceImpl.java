@@ -92,6 +92,7 @@ public class ParserServiceImpl implements ParseService {
                 try {
                     List<String> pictures = new ArrayList<>();
                     NodeList picsNodeList = element.getElementsByTagName(pictureUrlTag);
+                    product.setMainImgUrl(picsNodeList.item(0).getTextContent());
                     for (int j = 0; j < picsNodeList.getLength(); j++) {
                         pictures.add(picsNodeList.item(j).getTextContent());
                     }

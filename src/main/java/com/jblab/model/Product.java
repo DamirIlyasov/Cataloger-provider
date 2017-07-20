@@ -20,9 +20,18 @@ public class Product {
     @ElementCollection
     @Column(length = 400)
     private List<String> imgUrls;
+    private String mainImgUrl;
     private String currency;
     private String category;
     private int countViews = 0;
+
+    public String getMainImgUrl() {
+        return mainImgUrl;
+    }
+
+    public void setMainImgUrl(String mainImgUrl) {
+        this.mainImgUrl = mainImgUrl;
+    }
 
     public int getCountViews() {
         return countViews;
