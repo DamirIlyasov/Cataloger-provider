@@ -45,7 +45,7 @@ public class ParserServiceImpl implements ParseService {
         Document doc = dBuilder.parse(inputXml);
         doc.getDocumentElement().normalize();
 
-        logger.info("Searching for cathegories");
+        logger.info("Searching for categories");
         Map<String, String> categories = new HashMap<>();
 
         NodeList nodeListCategories = doc.getElementsByTagName("category");
@@ -86,16 +86,17 @@ public class ParserServiceImpl implements ParseService {
                 try {
                     NodeList paramsNodeList = element.getElementsByTagName("param");
                     for (int j = 0; j < paramsNodeList.getLength(); j++) {
-                        Node paramNode = paramsNodeList.item(0);
+                        Node paramNode = paramsNodeList.item(j);
                         Element paramElement = (Element) paramNode;
                         String paramName = paramElement.getAttribute("name");
                         String paramValue = paramElement.getTextContent();
+                        System.out.println(paramName+ ":"+ paramValue);
                         params.put(paramName, paramValue);
                     }
                 } catch (NullPointerException e) {
                     params = null;
                 }
-
+                System.out.println(params.size());
                 String readableName = transliter.toTranslit(name);
                 String readableCategory = transliter.toTranslit(category);
                 List<String> imgUrls = new ArrayList<>();
