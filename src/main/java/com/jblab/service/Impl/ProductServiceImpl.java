@@ -32,7 +32,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public void saveAll(List<Product> products) {
+    public void saveAllAndAddIdToReadableName(List<Product> products) {
         logger.info("-------------------------------------");
         logger.info("Saving products started...");
         int counter = 0;

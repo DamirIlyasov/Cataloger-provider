@@ -2,6 +2,7 @@ package com.jblab.model;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Product {
@@ -13,17 +14,27 @@ public class Product {
     private String name;
     private String readableName;
     private String price;
-    @Column(length = 3900)
+    @Column(columnDefinition = "Text")
     private String url;
     @ElementCollection
-    @Column(length = 3900)
+    @Column(columnDefinition = "Text")
     private List<String> imgUrls;
-    @Column(length = 3900)
+    @Column(columnDefinition = "Text")
     private String mainImgUrl;
     private String currency;
     private String category;
     private String readableCategory;
     private int countViews = 0;
+    @ElementCollection
+    private Map<String,String> params;
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
 
     public String getReadableName() {
         return readableName;

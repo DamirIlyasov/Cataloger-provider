@@ -26,16 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@PropertySource(value = "classpath:parser.properties")
 public class ParserServiceImpl implements ParseService {
     private final Transliter transliter;
-    private final Environment environment;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public ParserServiceImpl(Transliter transliter, Environment environment) {
+    public ParserServiceImpl(Transliter transliter) {
         this.transliter = transliter;
-        this.environment = environment;
     }
 
     public List<Product> parse(String path, String fileName) throws IOException, SAXException, ParserConfigurationException, NullPointerException {
@@ -48,23 +45,10 @@ public class ParserServiceImpl implements ParseService {
         Document doc = dBuilder.parse(inputXml);
         doc.getDocumentElement().normalize();
 
-        logger.info("Reading parser.properties...");
-        String categoryTag = environment.getProperty(fileName + ".category");
-        String offerTag = environment.getProperty(fileName + ".offer");
-        String offerCategoryIdTag = environment.getProperty(fileName + ".categoryId");
-        String offerNameTag = environment.getProperty(fileName + ".name");
-        String offerPriceTag = environment.getProperty(fileName + ".price");
-        String referalUrlTag = environment.getProperty(fileName + ".url");
-        String pictureUrlTag = environment.getProperty(fileName + ".picture");
-        String currencyTag = environment.getProperty(fileName + ".currency");
-        String descriptionTag = environment.getProperty(fileName + ".description");
-        String shopNameTag = environment.getProperty(fileName + ".shopName");
-        logger.info("Reading parser.properties completed success!");
-
         logger.info("Searching for cathegories");
         Map<String, String> categories = new HashMap<>();
 
-        NodeList nodeListCategories = doc.getElementsByTagName(categoryTag);
+        NodeList nodeListCategories = doc.getElementsByTagName("category");
         logger.info(nodeListCategories.getLength() + " categories found in XML.");
         for (int i = 0; i < nodeListCategories.getLength(); i++) {
             Node node = nodeListCategories.item(i);
@@ -78,8 +62,8 @@ public class ParserServiceImpl implements ParseService {
         logger.info("Parsing categories completed!");
         logger.info("Parsing products started!");
         List<Product> products = new ArrayList<>();
-        String shopName = doc.getElementsByTagName(shopNameTag).item(0).getTextContent();
-        NodeList nodeListProducts = doc.getElementsByTagName(offerTag);
+        String shopName = doc.getElementsByTagName("name").item(0).getTextContent();
+        NodeList nodeListProducts = doc.getElementsByTagName("offer");
         logger.info(nodeListProducts.getLength() + " products found in XML.");
 
         for (int i = 0; i < nodeListProducts.getLength(); i++) {
@@ -87,38 +71,55 @@ public class ParserServiceImpl implements ParseService {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
-                String category = categories.get(element.getElementsByTagName(offerCategoryIdTag).item(0).getTextContent());
-                String name = element.getElementsByTagName(offerNameTag).item(0).getTextContent();
-                String price = element.getElementsByTagName(offerPriceTag).item(0).getTextContent();
-                String url = element.getElementsByTagName(referalUrlTag).item(0).getTextContent();
-                String currency = element.getElementsByTagName(currencyTag).item(0).getTextContent();
+                String category = categories.get(element.getElementsByTagName("categoryId").item(0).getTextContent());
+                String name = element.getElementsByTagName("name").item(0).getTextContent();
+                String price = element.getElementsByTagName("price").item(0).getTextContent();
+                String url = element.getElementsByTagName("url").item(0).getTextContent();
+                String currency = element.getElementsByTagName("currencyId").item(0).getTextContent();
                 String description;
                 try {
-                    description = element.getElementsByTagName(descriptionTag).item(0).getTextContent();
+                    description = element.getElementsByTagName("description").item(0).getTextContent();
                 } catch (NullPointerException e) {
                     description = name;
                 }
+                Map<String, String> params = new HashMap<>();
+                try {
+                    NodeList paramsNodeList = element.getElementsByTagName("param");
+                    for (int j = 0; j < paramsNodeList.getLength(); j++) {
+                        Node paramNode = paramsNodeList.item(0);
+                        Element paramElement = (Element) paramNode;
+                        String paramName = paramElement.getAttribute("name");
+                        String paramValue = paramElement.getTextContent();
+                        params.put(paramName, paramValue);
+                    }
+                } catch (NullPointerException e) {
+                    params = null;
+                }
+
                 String readableName = transliter.toTranslit(name);
                 String readableCategory = transliter.toTranslit(category);
+                List<String> imgUrls = new ArrayList<>();
+                String mainImgUrl = null;
+                try {
+                    NodeList picsNodeList = element.getElementsByTagName("picture");
+                    mainImgUrl = picsNodeList.item(0).getTextContent();
+                    for (int j = 0; j < picsNodeList.getLength(); j++) {
+                        imgUrls.add(picsNodeList.item(j).getTextContent());
+                    }
+                } catch (NullPointerException e) {
+                    imgUrls = null;
+                }
 
                 Product product = new Product();
+                product.setParams(params);
+                product.setMainImgUrl(mainImgUrl);
+                product.setImgUrls(imgUrls);
                 product.setReadableName(readableName);
                 product.setReadableCategory(readableCategory);
                 product.setCategory(category);
                 product.setName(name);
                 product.setPrice(price);
                 product.setUrl(url);
-                try {
-                    List<String> pictures = new ArrayList<>();
-                    NodeList picsNodeList = element.getElementsByTagName(pictureUrlTag);
-                    product.setMainImgUrl(picsNodeList.item(0).getTextContent());
-                    for (int j = 0; j < picsNodeList.getLength(); j++) {
-                        pictures.add(picsNodeList.item(j).getTextContent());
-                    }
-                    product.setImgUrls(pictures);
-                } catch (NullPointerException e) {
-                    product.setImgUrls(null);
-                }
                 product.setDescription(description);
                 product.setCurrency(currency);
                 products.add(product);

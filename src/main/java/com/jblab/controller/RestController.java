@@ -33,7 +33,7 @@ public class RestController {
             int countViews = product.getCountViews();
             product.setCountViews(++countViews);
         }
-        productService.saveAll(products);
+        productService.saveAllAndAddIdToReadableName(products);
         logger.info("ViewCounters updated!");
         return products;
     }

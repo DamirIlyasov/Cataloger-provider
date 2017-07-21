@@ -45,7 +45,7 @@ public class FileController {
                 String path = storageService.save(multipartFile, "upload");
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
-                    productService.saveAll(products);
+                    productService.saveAllAndAddIdToReadableName(products);
                 } else {
                     model.addAttribute("message", "Error: ParseError!");
                 }
