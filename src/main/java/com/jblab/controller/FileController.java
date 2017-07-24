@@ -42,6 +42,7 @@ public class FileController {
         if (!multipartFile.isEmpty()) {
             String fileName = multipartFile.getOriginalFilename();
             String path = null;
+            int counter = 0;
             try {
                 path = storageService.save(multipartFile, "upload");
             } catch (IOException e) {
@@ -52,7 +53,7 @@ public class FileController {
             try {
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
-                    productService.saveAllAndAddIdToReadableName(products);
+                    counter = productService.saveAllAndAddIdToReadableName(products);
                 } else {
                     model.addAttribute("message", "Error: ParseError!");
                 }
@@ -67,7 +68,7 @@ public class FileController {
                     return "upload";
                 }
             }
-            model.addAttribute("message", "Successfully uploaded " + multipartFile.getOriginalFilename());
+            model.addAttribute("message", "Successfully uploaded " + counter + " products from " + multipartFile.getOriginalFilename());
         } else {
             model.addAttribute("message", "Error: Empty file!");
         }

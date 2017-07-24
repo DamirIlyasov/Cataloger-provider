@@ -5,7 +5,7 @@ import com.jblab.model.Product;
 import java.util.List;
 
 public interface ProductService {
-    void saveAllAndAddIdToReadableName(List<Product> products);
+    int saveAllAndAddIdToReadableName(List<Product> products);
 
     int deleteAllByList(List<Product> products);
 
