@@ -96,7 +96,6 @@ public class ParserServiceImpl implements ParseService {
                 } catch (NullPointerException e) {
                     params = null;
                 }
-                System.out.println(params.size());
                 String readableName = transliter.toTranslit(name);
                 String readableCategory = transliter.toTranslit(category);
                 List<String> imgUrls = new ArrayList<>();
