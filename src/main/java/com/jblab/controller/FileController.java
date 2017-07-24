@@ -40,9 +40,16 @@ public class FileController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String uploadFileAndSaveProductsAndFile(@RequestParam("file") MultipartFile multipartFile, Model model) {
         if (!multipartFile.isEmpty()) {
+            String fileName = multipartFile.getOriginalFilename();
+            String path = null;
             try {
-                String fileName = multipartFile.getOriginalFilename();
-                String path = storageService.save(multipartFile, "upload");
+                path = storageService.save(multipartFile, "upload");
+            } catch (IOException e) {
+                model.addAttribute("message", "Error: " + e.getMessage());
+                e.printStackTrace();
+                return "upload";
+            }
+            try {
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
                     productService.saveAllAndAddIdToReadableName(products);
@@ -50,9 +57,15 @@ public class FileController {
                     model.addAttribute("message", "Error: ParseError!");
                 }
             } catch (Exception e) {
-                model.addAttribute("message", "Error: " + e.getMessage());
-                e.printStackTrace();
-                return "upload";
+                String message = "";
+                try {
+                    storageService.delete(path);
+                    message = "Error while deleting file!";
+                } catch (IOException e1) {
+                    model.addAttribute("message", message + "Error: " + e.getMessage());
+                    e.printStackTrace();
+                    return "upload";
+                }
             }
             model.addAttribute("message", "Successfully uploaded " + multipartFile.getOriginalFilename());
         } else {
@@ -69,24 +82,31 @@ public class FileController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteProductsFromFileAndSaveFile(@RequestParam("file") MultipartFile multipartFile, Model model) {
         int deletedProductsCount = 0;
+        String path = null;
         if (!multipartFile.isEmpty()) {
             try {
                 String fileName = multipartFile.getOriginalFilename();
-                String path = storageService.save(multipartFile, "delete");
+                path = storageService.save(multipartFile, "delete");
                 List<Product> products = parserService.parse(path, fileName);
                 if (products != null) {
                     deletedProductsCount = productService.deleteAllByList(products);
                 } else {
                     model.addAttribute("message", "Error: ParseError!");
                 }
-            } catch (NullPointerException | IOException | SAXException | ParserConfigurationException e) {
-                model.addAttribute("message", "Error: " + e.getMessage());
-                e.printStackTrace();
-                return "delete";
+            } catch (Exception e) {
+                String message = "";
+                try {
+                    storageService.delete(path);
+                    message = "Error while deleting file!";
+                } catch (IOException e1) {
+                    model.addAttribute("message", message + "Error: " + e.getMessage());
+                    e.printStackTrace();
+                    return "delete";
+                }
             }
             model.addAttribute("message", deletedProductsCount + " products successfully deleted! " + multipartFile.getOriginalFilename());
         } else {
-            model.addAttribute("message","Error: empty file!");
+            model.addAttribute("message", "Error: empty file!");
         }
         return "delete";
     }

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -63,6 +64,12 @@ public class StorageServiceImpl implements StorageService {
         multipartFile.transferTo(file);
         logger.info("StorageService: saving file completed!");
         return file.getAbsolutePath();
+    }
+
+    @Override
+    public void delete(String stringPath) throws IOException {
+        Path path = Paths.get(stringPath);
+        Files.delete(path);
     }
 
 

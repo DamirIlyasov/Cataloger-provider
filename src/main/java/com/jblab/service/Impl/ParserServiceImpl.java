@@ -73,6 +73,7 @@ public class ParserServiceImpl implements ParseService {
                 Element element = (Element) node;
                 String category = categories.get(element.getElementsByTagName("categoryId").item(0).getTextContent());
                 String name = element.getElementsByTagName("name").item(0).getTextContent();
+                name = name.replaceAll("&QUOT;"," ");
                 String price = element.getElementsByTagName("price").item(0).getTextContent();
                 String url = element.getElementsByTagName("url").item(0).getTextContent();
                 String currency = element.getElementsByTagName("currencyId").item(0).getTextContent();
@@ -90,7 +91,6 @@ public class ParserServiceImpl implements ParseService {
                         Element paramElement = (Element) paramNode;
                         String paramName = paramElement.getAttribute("name");
                         String paramValue = paramElement.getTextContent();
-                        System.out.println(paramName+ ":"+ paramValue);
                         params.put(paramName, paramValue);
                     }
                 } catch (NullPointerException e) {
