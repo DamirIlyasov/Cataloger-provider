@@ -73,7 +73,7 @@ public class ParserServiceImpl implements ParseService {
                 Element element = (Element) node;
                 String category = categories.get(element.getElementsByTagName("categoryId").item(0).getTextContent());
                 String name = element.getElementsByTagName("name").item(0).getTextContent();
-                name = name.replaceAll("&QUOT;"," ");
+                name = name.replaceAll("&amp;quot;","");
                 String price = element.getElementsByTagName("price").item(0).getTextContent();
                 String url = element.getElementsByTagName("url").item(0).getTextContent();
                 String currency = element.getElementsByTagName("currencyId").item(0).getTextContent();
