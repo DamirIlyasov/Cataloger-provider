@@ -35,12 +35,13 @@ public class StorageServiceImpl implements StorageService {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
         String path = "";
         String envPath = environment.getProperty("storage.path");
+        String currentPcName = System.getProperty("user.name");
         if (status.equals("upload")) {
             if (envPath == null) {
-                path = "storage/uploaded/";
+                path = "/home/" + currentPcName + "/storage/uploaded/";
             } else {
                 if (envPath.equals("")) {
-                    path = "storage/uploaded/";
+                    path = "/home/" + currentPcName + "/storage/uploaded/";
                 } else {
                     path = envPath;
                 }
@@ -48,16 +49,22 @@ public class StorageServiceImpl implements StorageService {
         }
         if (status.equals("delete")) {
             if (envPath == null) {
-                path = "storage/deleted/";
+                path = "/home/" + currentPcName + "/storage/deleted/";
             } else {
                 if (envPath.equals("")) {
-                    path = "storage/deleted/";
+                    path = "/home/" + currentPcName + "/storage/deleted/";
                 } else {
                     path = envPath;
                 }
             }
         }
-        File file = new File(Paths.get("").toAbsolutePath() + "/" + path + format.format(date) + multipartFile.getOriginalFilename());
+        File dirs = new File(path);
+        if (!dirs.exists()) {
+            dirs.mkdirs();
+        }
+        String pathForSaveFile = path + format.format(date) + multipartFile.getOriginalFilename();
+        logger.info("Saving file in : " + pathForSaveFile);
+        File file = new File(pathForSaveFile);
         if (!file.exists()) {
             file.createNewFile();
         }
