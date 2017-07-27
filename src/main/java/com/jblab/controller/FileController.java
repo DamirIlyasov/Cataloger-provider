@@ -41,32 +41,31 @@ public class FileController {
     public String uploadFileAndSaveProductsAndFile(@RequestParam("file") MultipartFile multipartFile, Model model) {
         if (!multipartFile.isEmpty()) {
             String fileName = multipartFile.getOriginalFilename();
-            String path = null;
+//            String path = null;
             int counter = 0;
+//            try {
+//                path = storageService.save(multipartFile, "upload");
+//            } catch (IOException e) {
+//                model.addAttribute("message", "Error: " + e.getMessage());
+//                e.printStackTrace();
+//                return "upload";
+//            }
             try {
-                path = storageService.save(multipartFile, "upload");
-            } catch (IOException e) {
-                model.addAttribute("message", "Error: " + e.getMessage());
-                e.printStackTrace();
-                return "upload";
-            }
-            try {
-                List<Product> products = parserService.parse(path, fileName);
+                List<Product> products = parserService.parse(multipartFile, fileName);
                 if (products != null) {
                     counter = productService.saveAllAndAddIdToReadableName(products);
                 } else {
                     model.addAttribute("message", "Error: ParseError!");
                 }
             } catch (Exception e) {
-                String message = "";
-                try {
-                    storageService.delete(path);
-                    message = "Error while deleting file!";
-                } catch (IOException e1) {
-                    model.addAttribute("message", message + "Error: " + e.getMessage());
-                    e.printStackTrace();
-                    return "upload";
-                }
+//                try {
+//                    storageService.delete(path);
+//                    message = "Error while deleting file!";
+//                } catch (IOException e1) {
+                model.addAttribute("message", "Error: " + e.getMessage());
+                e.printStackTrace();
+                return "upload";
+//                }
             }
             model.addAttribute("message", "Successfully uploaded " + counter + " products from " + multipartFile.getOriginalFilename());
         } else {
@@ -83,27 +82,27 @@ public class FileController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteProductsFromFileAndSaveFile(@RequestParam("file") MultipartFile multipartFile, Model model) {
         int deletedProductsCount = 0;
-        String path = null;
+//        String path = null;
         if (!multipartFile.isEmpty()) {
             try {
                 String fileName = multipartFile.getOriginalFilename();
-                path = storageService.save(multipartFile, "delete");
-                List<Product> products = parserService.parse(path, fileName);
+//                path = storageService.save(multipartFile, "delete");
+                List<Product> products = parserService.parse(multipartFile, fileName);
                 if (products != null) {
                     deletedProductsCount = productService.deleteAllByList(products);
                 } else {
                     model.addAttribute("message", "Error: ParseError!");
                 }
             } catch (Exception e) {
-                String message = "";
-                try {
-                    storageService.delete(path);
-                    message = "Error while deleting file!";
-                } catch (IOException e1) {
-                    model.addAttribute("message", message + "Error: " + e.getMessage());
-                    e.printStackTrace();
-                    return "delete";
-                }
+//                String message = "";
+//                try {
+//                    storageService.delete(path);
+//                    message = "Error while deleting file!";
+//                } catch (IOException e1) {
+                model.addAttribute("message", "Error: " + e.getMessage());
+                e.printStackTrace();
+                return "delete";
+//                }
             }
             model.addAttribute("message", deletedProductsCount + " products successfully deleted! " + multipartFile.getOriginalFilename());
         } else {

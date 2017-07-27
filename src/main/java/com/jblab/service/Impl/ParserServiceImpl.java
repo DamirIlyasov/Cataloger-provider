@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -20,6 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,14 +37,16 @@ public class ParserServiceImpl implements ParseService {
         this.transliter = transliter;
     }
 
-    public List<Product> parse(String path, String fileName) throws IOException, SAXException, ParserConfigurationException, NullPointerException {
+    public List<Product> parse(MultipartFile multipartFile, String fileName) throws IOException, SAXException, ParserConfigurationException, NullPointerException {
         logger.info("------------------------------------------");
         logger.info("Parser: " + fileName + "...");
-        File inputXml = new File(path);
-        logger.info("Working on file: " + inputXml.getAbsolutePath());
+//        File inputXml = new File(path);
+        logger.info("Working on file: " + multipartFile.getOriginalFilename());
+
+        InputStream inputStream = multipartFile.getInputStream();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc = dBuilder.parse(inputXml);
+        Document doc = dBuilder.parse(inputStream);
         doc.getDocumentElement().normalize();
 
         logger.info("Searching for categories");
@@ -73,7 +77,7 @@ public class ParserServiceImpl implements ParseService {
                 Element element = (Element) node;
                 String category = categories.get(element.getElementsByTagName("categoryId").item(0).getTextContent());
                 String name = element.getElementsByTagName("name").item(0).getTextContent();
-                name = name.replaceAll("&amp;quot;","");
+                name = name.replaceAll("&amp;quot;", "");
                 String price = element.getElementsByTagName("price").item(0).getTextContent();
                 String url = element.getElementsByTagName("url").item(0).getTextContent();
                 String currency = element.getElementsByTagName("currencyId").item(0).getTextContent();

@@ -36,13 +36,10 @@ public class ProductServiceImpl implements ProductService {
         logger.info("-------------------------------------");
         logger.info("Saving products started...");
         int counter = 0;
+        List<Product> productsFromDb = productRepository.findAll();
         for (Product product : products) {
-            Product dbProduct = productRepository.findOneByUrl(product.getUrl());
-            if (dbProduct == null) {
+            if (!productsFromDb.contains(product)) {
                 productRepository.save(product);
-                Product p = productRepository.findOneByUrl(product.getUrl());
-                p.setReadableName(p.getReadableName() + "_" + p.getId());
-                productRepository.save(p);
                 counter++;
             }
         }
