@@ -10,7 +10,7 @@ services:
 
 before_install:
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t cataloger-provider
+  - docker build -t cataloger-provider .
   - docker images
   - docker tag cataloger-provider $DOCKER_USERNAME/cataloger-provider
   - docker push $DOCKER_USERNAME/cataloger-provider
