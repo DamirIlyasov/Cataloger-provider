@@ -63,6 +63,14 @@
 					<executable>true</executable>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.3.4</version>
+				<configuration>
+					<repository>cataloger-provider/${project.artifactId}</repository>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
