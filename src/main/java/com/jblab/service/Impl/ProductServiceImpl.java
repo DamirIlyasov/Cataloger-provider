@@ -38,13 +38,15 @@ public class ProductServiceImpl implements ProductService {
         int counter = 0;
         List<Product> productsFromDb = productRepository.findAll();
         for (Product product : products) {
-            product.setReadableName(product.getReadableName()+product.getId());
             if (!productsFromDb.contains(product)) {
                 productRepository.save(product);
+                Product dbProduct = productRepository.findOneByUrl(product.getUrl());
+                dbProduct.setReadableName(dbProduct.getReadableName()+dbProduct.getId());
+                productRepository.save(dbProduct);
                 counter++;
             }
         }
-
+        List<Product> productsList = productRepository.findAll();
         logger.info(counter + " products saved!");
         return counter;
     }
