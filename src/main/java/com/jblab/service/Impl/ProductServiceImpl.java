@@ -38,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
         int counter = 0;
         List<Product> productsFromDb = productRepository.findAll();
         for (Product product : products) {
+            product.setReadableName(product.getReadableName()+product.getId());
             if (!productsFromDb.contains(product)) {
                 productRepository.save(product);
                 counter++;
